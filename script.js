@@ -81,3 +81,32 @@ if (contactForm) {
         }
     });
 }
+
+// User review submission for portfolio page, display only on testimonials page
+const reviewForm = document.getElementById('review-form');
+if (reviewForm) {
+    reviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const reviewer = reviewForm.reviewer.value.trim();
+        const review = reviewForm.review.value.trim();
+        if (reviewer && review) {
+            // Save to localStorage
+            const reviews = JSON.parse(localStorage.getItem('userTestimonials') || '[]');
+            reviews.unshift({ reviewer, review });
+            localStorage.setItem('userTestimonials', JSON.stringify(reviews));
+            reviewForm.reset();
+            alert('Thank you! Your review will appear on the Testimonials page.');
+        }
+    });
+}
+// Display user reviews on testimonials page
+const testimonialsSection = document.querySelector('.user-testimonials');
+if (testimonialsSection) {
+    const reviews = JSON.parse(localStorage.getItem('userTestimonials') || '[]');
+    reviews.forEach(({ reviewer, review }) => {
+        const card = document.createElement('div');
+        card.className = 'testimonial-card';
+        card.innerHTML = `<p>“${review}”</p><span>- ${reviewer}</span>`;
+        testimonialsSection.prepend(card);
+    });
+}
