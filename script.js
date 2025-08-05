@@ -1,16 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Menu Toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    // ===== Background Elements Creation =====
+    createFloatingTechElements();
+    createBinaryCodeElements();
+    
+    // ===== Mobile Navigation =====
+    const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
     const mainNav = document.querySelector('.main-nav');
+    const navLinks = document.querySelectorAll('.nav-link');
     
     mobileMenuBtn.addEventListener('click', function() {
         mainNav.classList.toggle('active');
-        mobileMenuBtn.innerHTML = mainNav.classList.contains('active') ? 
+        this.innerHTML = mainNav.classList.contains('active') ? 
             '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
     });
     
-    // Close mobile menu when clicking on a link
-    const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
             if (mainNav.classList.contains('active')) {
@@ -20,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Smooth scrolling for anchor links
+    // ===== Smooth Scrolling =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -29,15 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetElement = document.querySelector(targetId);
             
             if (targetElement) {
+                const headerHeight = document.querySelector('.main-header').offsetHeight;
+                const targetPosition = targetElement.offsetTop - headerHeight;
+                
                 window.scrollTo({
-                    top: targetElement.offsetTop - 80,
+                    top: targetPosition,
                     behavior: 'smooth'
                 });
             }
         });
     });
     
-    // Active navigation link based on scroll position
+    // ===== Active Navigation Link on Scroll =====
     const sections = document.querySelectorAll('section');
     
     window.addEventListener('scroll', function() {
@@ -46,8 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.clientHeight;
+            const headerHeight = document.querySelector('.main-header').offsetHeight;
             
-            if (pageYOffset >= (sectionTop - 200)) {
+            if (pageYOffset >= (sectionTop - headerHeight - 100)) {
                 current = section.getAttribute('id');
             }
         });
@@ -60,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Portfolio filtering
+    // ===== Portfolio Filtering =====
     const filterBtns = document.querySelectorAll('.filter-btn');
     const portfolioItems = document.querySelectorAll('.portfolio-item');
     
@@ -77,38 +84,131 @@ document.addEventListener('DOMContentLoaded', function() {
             portfolioItems.forEach(item => {
                 if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
                     item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                    }, 50);
                 } else {
-                    item.style.display = 'none';
+                    item.style.opacity = '0';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
                 }
             });
         });
     });
     
-    // Star rating for reviews
-    const stars = document.querySelectorAll('.stars i');
-    
-    stars.forEach(star => {
-        star.addEventListener('click', function() {
-            const rating = this.getAttribute('data-rating');
-            
-            stars.forEach(s => {
-                if (s.getAttribute('data-rating') <= rating) {
-                    s.classList.add('active');
-                    s.classList.remove('far');
-                    s.classList.add('fas');
-                } else {
-                    s.classList.remove('active');
-                    s.classList.remove('fas');
-                    s.classList.add('far');
-                }
+    // ===== Review Form Submission =====
+    const reviewForm = document.getElementById('review-form');
+    if (reviewForm) {
+        // Initialize star rating
+        const stars = reviewForm.querySelectorAll('.stars i');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active', 'fas');
+                        s.classList.remove('far');
+                    } else {
+                        s.classList.remove('active', 'fas');
+                        s.classList.add('far');
+                    }
+                });
             });
-            
-            // You can store the rating value in a hidden input field if needed
-            // document.querySelector('input[name="rating"]').value = rating;
         });
-    });
+        
+        // Handle form submission
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const reviewer = reviewForm.querySelector('input[name="name"]').value.trim();
+            const review = reviewForm.querySelector('textarea[name="review"]').value.trim();
+            const rating = reviewForm.querySelectorAll('.stars i.active').length;
+            
+            if (reviewer && review && rating > 0) {
+                // Create new review element immediately
+                const newReview = document.createElement('div');
+                newReview.className = 'testimonial-card new-review';
+                newReview.innerHTML = `
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            ${'<i class="fas fa-star"></i>'.repeat(rating)}
+                            ${'<i class="far fa-star"></i>'.repeat(5 - rating)}
+                        </div>
+                        <p class="testimonial-text">"${review}"</p>
+                        <div class="client-info">
+                            <h4>${reviewer}</h4>
+                            <span>Client</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert at the top of testimonials
+                const testimonialsContainer = document.querySelector('.user-testimonials');
+                testimonialsContainer.insertBefore(newReview, testimonialsContainer.firstChild);
+                
+                // Save to localStorage
+                const reviews = JSON.parse(localStorage.getItem('userTestimonials') || '[]');
+                reviews.unshift({
+                    reviewer,
+                    review,
+                    rating,
+                    date: new Date().toISOString()
+                });
+                localStorage.setItem('userTestimonials', JSON.stringify(reviews));
+                
+                // Reset form
+                reviewForm.reset();
+                
+                // Reset stars
+                stars.forEach(star => {
+                    star.classList.remove('active', 'fas');
+                    star.classList.add('far');
+                });
+                
+                // Show success message
+                showAlert('Thank you for your review!', 'success');
+                
+                // Scroll to show new review
+                setTimeout(() => {
+                    newReview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            } else {
+                showAlert('Please fill all fields and provide a rating', 'error');
+            }
+        });
+    }
     
-    // Contact form submission
+    // ===== Load User Testimonials from LocalStorage =====
+    const userTestimonialsContainer = document.querySelector('.user-testimonials');
+    if (userTestimonialsContainer) {
+        const reviews = JSON.parse(localStorage.getItem('userTestimonials') || '[]');
+        
+        reviews.forEach(review => {
+            const testimonialCard = document.createElement('div');
+            testimonialCard.className = 'testimonial-card';
+            
+            testimonialCard.innerHTML = `
+                <div class="testimonial-content">
+                    <div class="rating">
+                        ${'<i class="fas fa-star"></i>'.repeat(review.rating || 5)}
+                        ${'<i class="far fa-star"></i>'.repeat(5 - (review.rating || 5))}
+                    </div>
+                    <p class="testimonial-text">"${review.review}"</p>
+                    <div class="client-info">
+                        <h4>${review.reviewer}</h4>
+                        <span>Client</span>
+                    </div>
+                </div>
+            `;
+            
+            userTestimonialsContainer.appendChild(testimonialCard);
+        });
+    }
+    
+    // ===== Contact Form Submission =====
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', async function(e) {
@@ -133,14 +233,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (response.ok) {
                     // Show success message
-                    alert('Thank you! Your message has been sent successfully.');
+                    showAlert('Thank you! Your message has been sent successfully.', 'success');
                     contactForm.reset();
                 } else {
                     // Show error message
-                    alert('Oops! There was a problem sending your message. Please try again.');
+                    showAlert('Oops! There was a problem sending your message. Please try again.', 'error');
                 }
             } catch (error) {
-                alert('Error: Unable to send message. Please check your connection and try again.');
+                showAlert('Error: Unable to send message. Please check your connection and try again.', 'error');
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
@@ -149,80 +249,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Review form submission
-    const reviewForm = document.getElementById('review-form');
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const reviewer = reviewForm.querySelector('input[name="name"]').value.trim();
-            const review = reviewForm.querySelector('textarea[name="review"]').value.trim();
-            
-            if (reviewer && review) {
-                // Get existing reviews from localStorage or initialize empty array
-                const reviews = JSON.parse(localStorage.getItem('userTestimonials') || [];
-                
-                // Add new review to beginning of array
-                reviews.unshift({
-                    reviewer,
-                    review,
-                    date: new Date().toISOString()
-                });
-                
-                // Save back to localStorage
-                localStorage.setItem('userTestimonials', JSON.stringify(reviews));
-                
-                // Show success message
-                alert('Thank you for your review! It will appear on the testimonials page.');
-                
-                // Reset form
-                reviewForm.reset();
-                
-                // Reset stars
-                stars.forEach(star => {
-                    star.classList.remove('active');
-                    star.classList.remove('fas');
-                    star.classList.add('far');
-                });
-            } else {
-                alert('Please fill in all fields before submitting.');
-            }
-        });
-    }
+    // ===== Set Current Year in Footer =====
+    document.getElementById('current-year').textContent = new Date().getFullYear();
     
-    // Load user testimonials from localStorage
-    const userTestimonialsContainer = document.querySelector('.user-testimonials');
-    if (userTestimonialsContainer) {
-        const reviews = JSON.parse(localStorage.getItem('userTestimonials') || '[]');
+    // ===== Helper Functions =====
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.textContent = message;
         
-        reviews.forEach(review => {
-            const testimonialCard = document.createElement('div');
-            testimonialCard.className = 'testimonial-card';
-            
-            testimonialCard.innerHTML = `
-                <div class="testimonial-content">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p>"${review.review}"</p>
-                    <div class="client-info">
-                        <div>
-                            <h4>${review.reviewer}</h4>
-                            <span>Client</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            userTestimonialsContainer.appendChild(testimonialCard);
-        });
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(alertDiv);
+            }, 300);
+        }, 3000);
     }
     
-    // Animation on scroll
+    // ===== Animation on Scroll =====
     const animateOnScroll = function() {
         const elements = document.querySelectorAll('.reveal');
         
@@ -238,4 +288,82 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Run once on page load
+    
+    // ===== Background Animation Functions =====
+    function createFloatingTechElements() {
+        const techEmojis = ['💻', '🖥️', '📱', '⌨️', '🔌', '📊', '💾', '🖱️', '🔋', '🖨️'];
+        const colors = ['#3b82f6', '#2563eb', '#1d4ed8', '#1e40af'];
+        
+        for (let i = 0; i < 15; i++) {
+            const emoji = document.createElement('div');
+            emoji.className = 'tech-emoji';
+            emoji.textContent = techEmojis[Math.floor(Math.random() * techEmojis.length)];
+            
+            // Random properties
+            const size = Math.random() * 1.5 + 1;
+            const duration = Math.random() * 30 + 20;
+            const delay = Math.random() * 15;
+            const opacity = Math.random() * 0.1 + 0.05;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Apply styles
+            emoji.style.fontSize = `${size}rem`;
+            emoji.style.animationDuration = `${duration}s`;
+            emoji.style.animationDelay = `${delay}s`;
+            emoji.style.opacity = opacity;
+            emoji.style.color = color;
+            
+            // Random position
+            emoji.style.left = `${Math.random() * 100}vw`;
+            emoji.style.top = `${Math.random() * 100}vh`;
+            
+            document.body.appendChild(emoji);
+        }
+    }
+    
+    function createBinaryCodeElements() {
+        const binaryChars = '01';
+        const sections = document.querySelectorAll('section');
+        
+        sections.forEach(section => {
+            const binaryElement = document.createElement('div');
+            binaryElement.className = 'binary-code';
+            
+            // Create random binary string
+            let binaryString = '';
+            for (let i = 0; i < 150; i++) {
+                binaryString += binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
+            }
+            
+            binaryElement.textContent = binaryString.repeat(5);
+            
+            // Random properties
+            const left = Math.random() * 80 + 10;
+            const duration = Math.random() * 30 + 40;
+            const delay = Math.random() * 20;
+            const fontSize = Math.random() * 0.8 + 0.6;
+            
+            // Apply styles
+            binaryElement.style.left = `${left}%`;
+            binaryElement.style.animationDuration = `${duration}s`;
+            binaryElement.style.animationDelay = `${delay}s`;
+            binaryElement.style.fontSize = `${fontSize}rem`;
+            
+            section.appendChild(binaryElement);
+        });
+    }
 });
+
+// ===== Service Worker Registration (PWA) =====
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(
+            function(registration) {
+                console.log('ServiceWorker registration successful');
+            }, 
+            function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            }
+        );
+    });
+                    }
