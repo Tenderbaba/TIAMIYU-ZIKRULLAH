@@ -50,15 +50,43 @@ body {
   animation: gradientBG 15s ease infinite;
 }
 
-/* ===== Animated Background Elements ===== */
-/* Floating Tech Icons */
-.tech-icon {
+/* ===== Background Elements ===== */
+#background-container {
   position: fixed;
-  font-size: 1.8rem;
-  opacity: 0.08;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.tech-emoji {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.1;
   z-index: -1;
   animation: float 25s linear infinite;
-  pointer-events: none;
+  user-select: none;
+}
+
+.binary-code {
+  position: absolute;
+  color: rgba(59, 130, 246, 0.05);
+  font-family: monospace;
+  font-size: 0.8rem;
+  z-index: -1;
+  animation: scrollUp 50s linear infinite;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Background Animations */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes float {
@@ -77,18 +105,6 @@ body {
   100% {
     transform: translate(0, 0) rotate(360deg);
   }
-}
-
-/* Binary Code Animation */
-.binary-code {
-  position: fixed;
-  color: rgba(59, 130, 246, 0.05);
-  font-family: monospace;
-  font-size: 1rem;
-  z-index: -1;
-  animation: scrollUp 50s linear infinite;
-  white-space: nowrap;
-  pointer-events: none;
 }
 
 @keyframes scrollUp {
@@ -117,12 +133,6 @@ body::before {
 @keyframes circuitMove {
   from { background-position: 0 0, 0 0, 0 0, 0 0; }
   to { background-position: 300px 300px, -300px -300px, 120px 60px, -60px 120px; }
-}
-
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* ===== Layout Components ===== */
@@ -1118,7 +1128,7 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: 1fr;
   }
   
-  .footer-content {
+  .footeontent {
     flex-direction: column;
   }
-}
+}hj
