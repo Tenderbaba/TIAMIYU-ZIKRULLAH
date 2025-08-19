@@ -1,0 +1,65 @@
+/* BASE STYLES */
+:root {
+    --primary: #6366f1;
+    --secondary: #8b5cf6;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --glass: rgba(255, 255, 255, 0.08);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--light);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* LAYOUT STYLES */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 80px 0;
+}
+
+/* COMPONENT STYLES */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .results-bar {
+        padding: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .case-study {
+        padding: 1.5rem !important;
+    }
+}

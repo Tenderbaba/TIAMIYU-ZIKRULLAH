@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zikrullah Tiamiyu | Full Stack Developer</title>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/styles.css" as="style">
+    <link rel="preload" href="css/animations.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" as="font" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Preloader CSS -->
+    <style>
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Additional styles for new content */
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        .hero p.subheadline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        .trust-badge {
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            opacity: 0.7;
+        }
+        .results-bar {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 3rem 0;
+            text-align: center;
+        }
+        .result-item {
+            display: inline-block;
+            margin: 0 1.5rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .section {
+            padding: 5rem 0;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .case-studies {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .case-study {
+            padding: 2rem;
+        }
+        .case-study h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .stats {
+            display: flex;
+            margin: 1.5rem 0;
+        }
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .client-quote {
+            font-style: italic;
+            padding: 1rem;
+            border-left: 3px solid var(--primary);
+            margin: 1.5rem 0;
+        }
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        .about-photo {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .about-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .working-style {
+            margin-top: 2rem;
+        }
+        .working-style li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.8rem;
+        }
+        .working-style li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+        .contact-cta {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .promise-item {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        .promise-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .social-links {
+            margin: 1.5rem 0;
+        }
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p.subheadline {
+                font-size: 1.2rem;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            .result-item {
+                display: block;
+                margin: 1.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="tech-logos" id="animated-logos"></div>
+    <div id="particles-js"></div>
+    
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content glass-card fade-in" style="padding: 3rem;">
+                    <h1>I Build Scalable Web Apps That Drive 30% More Revenue for SaaS Companies</h1>
+                    <p class="subheadline">Full Stack Developer Specializing in React & Node.js | Performance Optimization Expert</p>
+                    <img src="profile.jpg" alt="Zikrullah Tiamiyu coding" style="width: 100%; max-width: 600px; border-radius: 12px; margin: 2rem auto; display: block;">
+                    <a href="#" class="cta-button" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/your-link'});return false;">Get Your Free Architecture Review →</a>
+                    <p class="trust-badge">Trusted by YC Startups & Fortune 500 Teams</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Bar -->
+        <section class="container">
+            <div class="results-bar glass-card fade-in">
+                <div class="result-item">
+                    <div>[▰▰▰▰▰▰▰▰▰▰]</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                    <div>28 Projects Delivered</div>
+                </div>
+                <div class="result-item">
+                    <div>[▰▰▰▰▰▰▰▰▰▱]</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 94%;"></div></div>
+                    <div>94% Client Retention</div>
+                </div>
+                <div class="result-item">
+                    <div>[▰▰▰▰▰▰▰▱▱▱]</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 72%;"></div></div>
+                    <div>$3.2M Revenue Generated</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Studies -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title fade-in">Case Studies</h2>
+                <div class="case-studies">
+                    <div class="case-study glass-card fade-in">
+                        <h3>FinTech Dashboard</h3>
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-value">8.4s</div>
+                                <div>Before</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">0.6s</div>
+                                <div>After</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">22%</div>
+                                <div>Conversion ↑</div>
+                            </div>
+                        </div>
+                        <p><strong>Key Tech:</strong> React Virtualization + Redis caching</p>
+                        <div class="client-quote">"Solved our scaling issues in 2 weeks"</div>
+                    </div>
+                    <div class="case-study glass-card fade-in">
+                        <h3>Headless E-Commerce</h3>
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-value">$1.2M</div>
+                                <div>Before</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">$2.7M</div>
+                                <div>After</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">0.9s</div>
+                                <div>Load Time</div>
+                            </div>
+                        </div>
+                        <p><strong>Key Tech:</strong> Next.js + Shopify Hydrogen</p>
+                        <div class="client-quote">"Our best tech investment"</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section" style="background: rgba(15, 23, 42, 0.7);">
+            <div class="container">
+                <h2 class="section-title fade-in">About Me</h2>
+                <div class="about-content">
+                    <div class="about-photo fade-in">
+                        <img src="whiteboard-photo.jpg" alt="Zikrullah Tiamiyu with architecture diagrams">
+                    </div>
+                    <div class="about-text fade-in">
+                        <h3>Ex-financial analyst turned developer.</h3>
+                        <p>I combine business acumen with technical precision to build apps that:</p>
+                        <ul>
+                            <li>Convert 30% better</li>
+                            <li>Scale to 100k+ users</li>
+                            <li>Require 40% less maintenance</li>
+                        </ul>
+                        <div class="working-style">
+                            <h4>Working Style:</h4>
+                            <ul class="working-style">
+                                <li>Weekly progress demos</li>
+                                <li>Slack access during EST hours</li>
+                                <li>100% deadline guarantee</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section">
+            <div class="container">
+                <div class="contact-cta glass-card fade-in" style="padding: 3rem;">
+                    <h2 class="section-title">Let's Build Your Next Competitive Advantage</h2>
+                    <div class="calendly-inline-widget" data-url="https://calendly.com/your-link" style="min-width:320px;height:630px;"></div>
+                    <div style="margin-top: 2rem;">
+                        <div class="promise-item">
+                            <div class="promise-number">1</div>
+                            <div>24-hour initial response</div>
+                        </div>
+                        <div class="promise-item">
+                            <div class="promise-number">2</div>
+                            <div>Free technical assessment</div>
+                        </div>
+                        <div class="promise-item">
+                            <div class="promise-number">3</div>
+                            <div>Fixed-price quotes</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">"Follow-up within 48h if you don't hear back"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://linkedin.com/in/yourprofile" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/yourprofile" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="mailto:zikrullahtiamiyu100@gmail.com"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+2348052113060"><i class="fas fa-phone"></i></a>
+                </div>
+                <p>Email: zikrullahtiamiyu100@gmail.com</p>
+                <p>Phone: +234 805 2113 060</p>
+                <p style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.6;">Proudly built with Next.js - 100/100 Lighthouse Score</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Calendly -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    <script>
+        // Initialize Calendly popup widget
+        document.addEventListener('DOMContentLoaded', function() {
+            // This will be called when the Calendly script loads
+            window.Calendly = window.Calendly || {};
+            window.Calendly.initBadgeWidget = window.Calendly.initBadgeWidget || function() {};
+        });
+    </script>
+</body>
+</html>
